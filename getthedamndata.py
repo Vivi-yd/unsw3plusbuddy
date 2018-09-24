@@ -5,38 +5,37 @@ env = Environment(
     autoescape=select_autoescape(['html', 'xml'])
 )
 
-f1 = open('course-list.json','r')
-course_details = f1.read()
-parsed_json = json.loads(course_details)
-course_names = []
-term1 = []
-term2 = []
-term3 = []
+with open('course-list.json', 'r') as course_list:
+    course_details = course_list.read()
+    parsed_json = json.loads(course_details)
+    course_names = []
+    term1 = []
+    term2 = []
+    term3 = []
 
-for course in parsed_json:
-    name = course["title"]
-    if course["t1"] == "1":
-        term1.append(course)
-    if course["t2"] == "1":
-        term2.append(course)
-    if course["t3"] == "1":
-        term3.append(course)
-        
-template = env.get_template('base.html')
-f2 = open("unsw3plushelper/index.html", "w")
-f2.write(template.render(courses=parsed_json))
-f2.close()
+    for course in parsed_json:
+        name = course["title"]
+        if course["t1"] == "1":
+            term1.append(course)
+        if course["t2"] == "1":
+            term2.append(course)
+        if course["t3"] == "1":
+            term3.append(course)
+            
+    template = env.get_template('base.html')
 
-f3 = open("unsw3plushelper/term1.html", "w")
-f3.write(template.render(courses=term1))
-f3.close()
+    with open("unsw3plushelper/index.html", "w") as index:
+        index.write(template.render(courses=parsed_json))
 
-f4 = open("unsw3plushelper/term2.html", "w")
-f4.write(template.render(courses=term2))
-f4.close()
+    with open("unsw3plushelper/term1.html", "w") as term1f:
+        term1f.write(template.render(courses=term1))
 
-f5 = open("unsw3plushelper/term3.html", "w")
-f5.write(template.render(courses=term3))
-f5.close()
+    with open("unsw3plushelper/term2.html", "w") as term2f:
+        term2f.write(template.render(courses=term2))
 
-f1.close()
+    with open("unsw3plushelper/term3.html", "w") as term3f:
+        term3f.write(template.render(courses=term3))
+
+    template = env.get_template('interactive.html')
+    with open("unsw3plushelper/interactive.html", "w") as interactive:
+        interactive.write(template.render(courses=parsed_json))
