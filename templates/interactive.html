@@ -1,0 +1,94 @@
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>unsw3plusbuddy</title>
+
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+.search {
+	margin-bottom: 30px;
+}
+
+.items {
+	
+}
+
+[data-filter-item] {
+	padding: 15px;
+	background-color: #ccc;
+	border: 1px solid #fff;
+}
+
+.hidden {
+	display: none;
+} 
+    </style>
+
+  </head>
+  <body style="background: url(tonton.png)">
+    <div class="container">
+    <div class="page-header">
+            <h1 style='text-shadow: 2px 2px white'> Trimester Planning Helper 
+            </h1>
+                <small> Because UNSW3+ never thought sorting courses by terms might be helpful...</small>
+    </div>
+    <div class="btn-group" role="group" aria-label="...">
+        <a href="index.html" class="btn btn-default"> All courses</a>
+        <a href="term1.html" class="btn btn-default">Term 1</a>
+        <a href="term2.html" class="btn btn-default">Term 2</a>
+        <a href="term3.html" class="btn btn-default">Term 3</a>
+        <a href="interactive.html" class="btn btn-default">Interactive</a>
+    </div>
+    <div></div>
+    <div style="margin-top: 1em">
+        <div class="search">
+            <input type="text" placeholder="search" data-search /><br/>
+            <label for="term1">Term 1</label><input id="term1_input" class="term_select" type="checkbox" checked/>
+            <label for="term2">Term 2</label><input id="term2_input" class="term_select" type="checkbox" checked/>
+            <label for="term3">Term 3</label><input id="term3_input" class="term_select" type="checkbox" checked/>
+        </div>
+            {% for course in courses %}
+            <div 
+                {% if course['t1'] == '1' %}term-1{% endif %} {% if course['t2'] == '1' %}term-2{% endif %} {% if course['t3'] == '1' %}term-3{% endif %}
+                data-filter-item data-filter-name=" {{ course ['code'].lower()}} {{ course['title'].lower() }}">
+                <a href = "https://www.handbook.unsw.edu.au/{{course['career']}}/courses/2019/{{course['code']}}/"> 
+                    {{ course ['code']}} {% if course['t1'] == '1' %}[1]{% else %}[  ]{% endif %}{% if course['t2'] == '1' %}[2]{% else %}[ ]{% endif %}{% if course['t3'] == '1' %}[3]{% else %}[ ]{% endif %}
+                    <br/>
+                    {{ course ['title'] }}
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+      <script>
+function filter() {
+	var searchVal = $('[data-search]').val();
+	var filterItems = $('[data-filter-item]');
+        filterItems.hide();
+
+	if ( searchVal != ''){
+            filterItems = filterItems.filter('[data-filter-name*="' + searchVal.toLowerCase() + '"]')
+	} 
+        var match_string = "";
+        if ($("#term1_input").prop('checked')) match_string+="[term-1],";
+        if ($("#term2_input").prop('checked')) match_string+="[term-2],";
+        if ($("#term3_input").prop('checked')) match_string+="[term-3],";
+        if (match_string != ""){
+            match_string+="[nop]" // so we don't have to deal with trailing comma
+            filterItems = filterItems.filter(match_string)
+        }
+        filterItems.show();
+}
+$('[data-search]').on('keyup', filter);
+$('.term_select').click(filter);
+    </script>
+
+  </div>
+  </body>
+</html>
