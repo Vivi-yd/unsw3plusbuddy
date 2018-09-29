@@ -1,3 +1,5 @@
 .DS_Store
 unsw3plushelper/*.html
 __pycache__
+Pipfile
+Pipfile.lock
